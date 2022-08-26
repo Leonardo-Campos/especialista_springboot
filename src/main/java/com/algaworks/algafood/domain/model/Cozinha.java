@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-//@JsonRootName("Gastronomia")
+@JsonRootName("cozinha")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
