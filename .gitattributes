@@ -1,1 +1,3 @@
 *.sql linguist-detectable=true
+
+# adiciona mysql como linguagem do GITHUB
