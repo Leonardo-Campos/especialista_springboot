@@ -2,6 +2,7 @@ package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNãoEncontradaException;
+import com.algaworks.algafood.domain.exception.NegocioException;
 import com.algaworks.algafood.domain.model.Estado;
 import com.algaworks.algafood.domain.repository.EstadoRepository;
 import com.algaworks.algafood.domain.service.CadastroEstadoService;
@@ -36,7 +37,11 @@ public class EstadoController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Estado adicionar(@RequestBody Estado estado) {
-        return cadastroEstado.salvar(estado);
+        try {
+            return cadastroEstado.salvar(estado);
+        } catch (EntidadeNãoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
     @PutMapping("/{estadoId}")
@@ -45,8 +50,11 @@ public class EstadoController {
         Estado estadoAtual = cadastroEstado.buscarOuFalhar(estadoId);
 
         BeanUtils.copyProperties(estado, estadoAtual, "id");
-
-        return cadastroEstado.salvar(estadoAtual);
+        try {
+            return cadastroEstado.salvar(estadoAtual);
+        } catch (EntidadeNãoEncontradaException e) {
+            throw new NegocioException(e.getMessage());
+        }
     }
 
 
