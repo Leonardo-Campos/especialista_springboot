@@ -1,14 +1,14 @@
 package com.algaworks.algafood.domain.exception;
 
-public class CozinhaNãoEncontradaException extends EntidadeNãoEncontradaException {
+public class CozinhaNaoEncontradaException extends EntidadeNaoEncontradaException {
 
     private static final long serialVersionUID = 1L;
 
-    public CozinhaNãoEncontradaException(String mensagem) {
+    public CozinhaNaoEncontradaException(String mensagem) {
         super(mensagem);
     }
 
-    public CozinhaNãoEncontradaException(Long cidadeId) {
+    public CozinhaNaoEncontradaException(Long cidadeId) {
         this(String.format("Não existe um cadastro de cidade com código %d", cidadeId));
     }
 }

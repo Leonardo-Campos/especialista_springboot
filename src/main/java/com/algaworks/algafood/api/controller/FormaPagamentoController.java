@@ -1,13 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNãoEncontradaException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FormaPagamento;
-import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
-import com.algaworks.algafood.domain.repository.PermissaoRepository;
 import com.algaworks.algafood.domain.service.CadastroFormaPagamentoService;
-import com.algaworks.algafood.domain.service.CadastroPermissaoService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -70,7 +67,7 @@ public class FormaPagamentoController {
             cadastroFormaPagamento.excluir(formapagamentoId);
             return ResponseEntity.noContent().build();
 
-        } catch (EntidadeNãoEncontradaException e) {
+        } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
 
         } catch (EntidadeEmUsoException e) {

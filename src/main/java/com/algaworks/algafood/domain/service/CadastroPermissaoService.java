@@ -1,7 +1,7 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNãoEncontradaException;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Permissao;
 import com.algaworks.algafood.domain.repository.PermissaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class CadastroPermissaoService {
             permissaoRepository.deleteById(permissaoId);
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNãoEncontradaException(
+            throw new EntidadeNaoEncontradaException(
                     String.format("Não existe um cadastro de permissão com código %d", permissaoId));
 
         } catch (DataIntegrityViolationException e) {
