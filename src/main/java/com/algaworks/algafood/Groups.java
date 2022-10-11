@@ -1,4 +1,4 @@
-package com;
+package com.algaworks.algafood;
 
 public interface Groups {
 

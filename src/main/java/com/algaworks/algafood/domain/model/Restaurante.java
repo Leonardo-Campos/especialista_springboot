@@ -1,6 +1,6 @@
 package com.algaworks.algafood.domain.model;
 
-import com.Groups;
+import com.algaworks.algafood.Groups;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,7 +29,7 @@ public class Restaurante {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @NotBlank//(message = "Nome é obrigatório")
     @Column(nullable = false)
     private String nome;
 
