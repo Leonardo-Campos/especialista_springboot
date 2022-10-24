@@ -1,11 +1,9 @@
 package com.algaworks.algafood.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,6 @@ public class Grupo {
     @Column(nullable = false)
     private String nome;
 
-    @JsonIgnore
     @ManyToMany
     @JoinTable(name = "grupo_permissao",
             joinColumns = @JoinColumn(name = "grupo_id"),
