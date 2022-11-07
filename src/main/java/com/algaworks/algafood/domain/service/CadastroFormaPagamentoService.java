@@ -2,6 +2,7 @@ package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
+import com.algaworks.algafood.domain.exception.FormaPagamentoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FormaPagamento;
 import com.algaworks.algafood.domain.repository.FormaPagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,27 +14,35 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CadastroFormaPagamentoService {
 
+    private static final String MSG_FORMA_PAGAMENTO_EM_USO
+            = "Forma de pagamento de código %d não pode ser removida, pois está em uso";
+
     @Autowired
     private FormaPagamentoRepository formaPagamentoRepository;
 
+    @Transactional
     public FormaPagamento salvar(FormaPagamento formaPagamento) {
         return formaPagamentoRepository.save(formaPagamento);
     }
 
     @Transactional
-    public void excluir(Long formapagamentoId) {
+    public void excluir(Long formaPagamentoId) {
         try {
-            formaPagamentoRepository.deleteById(formapagamentoId);
+            formaPagamentoRepository.deleteById(formaPagamentoId);
             formaPagamentoRepository.flush();
 
         } catch (EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontradaException(
-                    String.format("Não existe um cadastro de Forma de Pagamento com código %d", formapagamentoId));
+            throw new FormaPagamentoNaoEncontradaException(formaPagamentoId);
 
         } catch (DataIntegrityViolationException e) {
             throw new EntidadeEmUsoException(
-                    String.format("Forma de pagamento de código %d não pode ser removida, pois está em uso", formapagamentoId));
+                    String.format(MSG_FORMA_PAGAMENTO_EM_USO, formaPagamentoId));
         }
+    }
+
+    public FormaPagamento buscarOuFalhar(Long formaPagamentoId) {
+        return formaPagamentoRepository.findById(formaPagamentoId)
+                .orElseThrow(() -> new FormaPagamentoNaoEncontradaException(formaPagamentoId));
     }
 
 }
