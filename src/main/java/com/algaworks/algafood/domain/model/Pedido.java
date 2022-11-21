@@ -1,13 +1,11 @@
 package com.algaworks.algafood.domain.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,10 +49,12 @@ public class Pedido {
     @JoinColumn(name = "usuario_cliente_id", nullable = false)
     private Usuario cliente;
 
-    @OneToMany(mappedBy = "pedido")
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<ItemPedido> itens = new ArrayList<>();
 
     public void calcularValorTotal() {
+        getItens().forEach(ItemPedido::calcularPrecoTotal);
+
         this.subtotal = getItens().stream()
                 .map(item -> item.getPrecoTotal())
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -62,12 +62,5 @@ public class Pedido {
         this.valorTotal = this.subtotal.add(this.taxaFrete);
     }
 
-    public void definirFrete() {
-        setTaxaFrete(getRestaurante().getTaxaFrete());
-    }
-
-    public void atribuirPedidoAosItens() {
-        getItens().forEach(item -> item.setPedido(this));
-    }
 
 }
