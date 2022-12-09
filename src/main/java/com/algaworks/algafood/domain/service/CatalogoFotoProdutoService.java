@@ -17,13 +17,13 @@ public class CatalogoFotoProdutoService {
     private ProdutoRepository produtoRepository;
 
     @Autowired
-    private FotoStorageService fotoStorageService;
+    private FotoStorageService fotoStorage;
 
     @Transactional
     public FotoProduto salvar(FotoProduto foto, InputStream dadosArquivo) {
         Long restauranteId = foto.getRestauranteId();
         Long produtoId = foto.getProduto().getId();
-        String nomeNovoArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
+        String nomeNovoArquivo = fotoStorage.gerarNomeArquivo(foto.getNomeArquivo());
         String nomeArquivoExistente = null;
 
         Optional<FotoProduto> fotoExistente = produtoRepository
@@ -44,10 +44,20 @@ public class CatalogoFotoProdutoService {
                 .build();
 
 
-        fotoStorageService.substituir(nomeArquivoExistente, novaFoto);
+        fotoStorage.substituir(nomeArquivoExistente, novaFoto);
 
         return foto;
 
+    }
+
+    @Transactional
+    public void excluir(Long restauranteId, Long produtoId) {
+        FotoProduto foto = buscarOuFalhar(restauranteId, produtoId);
+
+        produtoRepository.delete(foto);
+        produtoRepository.flush();
+
+        fotoStorage.remover(foto.getNomeArquivo());
     }
 
     public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {

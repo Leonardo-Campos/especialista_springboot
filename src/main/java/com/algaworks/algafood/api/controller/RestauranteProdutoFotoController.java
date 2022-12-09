@@ -9,9 +9,9 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
-import org.apache.maven.lifecycle.internal.LifecycleStarter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -68,9 +68,9 @@ public class RestauranteProdutoFotoController {
     }
 
     @GetMapping
-    public ResponseEntity<InputStreamResource> servirFoto(@PathVariable Long restauranteId,
-                                                          @PathVariable Long produtoId,
-                                                          @RequestHeader(name = "accept") String acceptHeader)
+    public ResponseEntity<InputStreamResource> servir(@PathVariable Long restauranteId,
+                                                      @PathVariable Long produtoId,
+                                                      @RequestHeader(name = "accept") String acceptHeader)
             throws HttpMediaTypeNotAcceptableException {
         try {
             FotoProduto fotoProduto = catalogoFotoProduto.buscarOuFalhar(restauranteId, produtoId);
@@ -89,6 +89,13 @@ public class RestauranteProdutoFotoController {
         } catch (EntidadeNaoEncontradaException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable Long restauranteId,
+                        @PathVariable Long produtoId) {
+        catalogoFotoProduto.excluir(restauranteId, produtoId);
     }
 
     private void verificarCompatibilidadeType(MediaType mediaTypeFoto,
