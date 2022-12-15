@@ -1,16 +1,14 @@
 package com.algaworks.algafood.domain.service;
 
-import java.io.InputStream;
-import java.util.Optional;
-
+import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradaException;
+import com.algaworks.algafood.domain.model.FotoProduto;
+import com.algaworks.algafood.domain.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradaException;
-import com.algaworks.algafood.domain.model.FotoProduto;
-import com.algaworks.algafood.domain.repository.ProdutoRepository;
-import com.algaworks.algafood.domain.service.FotoStorageService.NovaFoto;
+import java.io.InputStream;
+import java.util.Optional;
 
 @Service
 public class CatalogoFotoProdutoService {
@@ -31,29 +29,25 @@ public class CatalogoFotoProdutoService {
         Optional<FotoProduto> fotoExistente = produtoRepository
                 .findFotoById(restauranteId, produtoId);
 
-        if (fotoExistente.isPresent()) {
+        if(fotoExistente.isPresent()){
             nomeArquivoExistente = fotoExistente.get().getNomeArquivo();
             produtoRepository.delete(fotoExistente.get());
         }
 
         foto.setNomeArquivo(nomeNovoArquivo);
-        foto =  produtoRepository.save(foto);
+        foto = produtoRepository.save(foto);
         produtoRepository.flush();
 
-        NovaFoto novaFoto = NovaFoto.builder()
+        FotoStorageService.NovaFoto novaFoto = FotoStorageService.NovaFoto.builder()
                 .nomeArquivo(foto.getNomeArquivo())
-                .contentType(foto.getContentType())
                 .inputStream(dadosArquivo)
                 .build();
+
 
         fotoStorage.substituir(nomeArquivoExistente, novaFoto);
 
         return foto;
-    }
 
-    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
-        return produtoRepository.findFotoById(restauranteId, produtoId)
-                .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
     }
 
     @Transactional
@@ -66,4 +60,8 @@ public class CatalogoFotoProdutoService {
         fotoStorage.remover(foto.getNomeArquivo());
     }
 
+    public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
+        return produtoRepository.findFotoById(restauranteId, produtoId)
+                .orElseThrow(() -> new FotoProdutoNaoEncontradaException(restauranteId, produtoId));
+    }
 }
