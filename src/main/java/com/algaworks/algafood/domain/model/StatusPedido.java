@@ -1,7 +1,5 @@
 package com.algaworks.algafood.domain.model;
 
-import org.apache.maven.lifecycle.internal.LifecycleStarter;
-
 import java.util.Arrays;
 import java.util.List;
 
