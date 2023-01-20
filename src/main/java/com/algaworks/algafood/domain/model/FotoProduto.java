@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class FotoProduto {
 
+
     @EqualsAndHashCode.Include
     @Id
     @Column(name = "produto_id")
