@@ -3,22 +3,14 @@ package com.algaworks.algafood.api.controller;
 import com.algaworks.algafood.api.assembler.PermissaoModelAssembler;
 import com.algaworks.algafood.api.model.input.PermissaoModel;
 import com.algaworks.algafood.api.openapi.controller.GrupoPermissaoControllerOpenApi;
-import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
-import com.algaworks.algafood.domain.exception.EntidadeNaoEncontradaException;
 import com.algaworks.algafood.domain.model.Grupo;
-import com.algaworks.algafood.domain.model.Permissao;
-import com.algaworks.algafood.domain.repository.PermissaoRepository;
 import com.algaworks.algafood.domain.service.CadastroGrupoService;
-import com.algaworks.algafood.domain.service.CadastroPermissaoService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/grupos/{grupoId}/permissoes",

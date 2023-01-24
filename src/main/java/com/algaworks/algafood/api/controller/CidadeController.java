@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 
+import com.algaworks.algafood.api.ResourceUriHelper;
 import com.algaworks.algafood.api.assembler.CidadeInputDisassembler;
 import com.algaworks.algafood.api.assembler.CidadeModelAssembler;
 import com.algaworks.algafood.api.openapi.controller.CidadeControllerOpenApi;
@@ -12,6 +13,8 @@ import com.algaworks.algafood.domain.model.Cidade;
 import com.algaworks.algafood.domain.repository.CidadeRepository;
 import com.algaworks.algafood.domain.service.CadastroCidadeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -49,7 +52,17 @@ public class CidadeController implements CidadeControllerOpenApi {
 
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
-        return cidadeModelAssembler.toModel(cidade);
+        CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
+
+        cidadeModel.add(new Link("http://localhost:8080/cidades/1"));
+
+//        cidadeModel.add(new Link("http://localhost:8080/cidades/1", IanaLinkRelations.COLLECTION));
+        cidadeModel.add(new Link("http://localhost:8080/cidades/1", "cidades"));
+
+        cidadeModel.getEstado().add(Link.valueOf("http://localhost:8080/estados/1"));
+
+
+        return cidadeModel;
     }
 
 
@@ -61,7 +74,12 @@ public class CidadeController implements CidadeControllerOpenApi {
 
             cidade = cadastroCidade.salvar(cidade);
 
-            return cidadeModelAssembler.toModel(cidade);
+
+            CidadeModel cidadeModel= cidadeModelAssembler.toModel(cidade);
+
+            ResourceUriHelper.addUriInResponseHeader(cidadeModel.getId());
+
+            return cidadeModel;
         } catch (EstadoNaoEncontradoException e) {
             throw new NegocioException(e.getMessage(), e);
         }

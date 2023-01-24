@@ -1,4 +1,4 @@
-package com.algaworks.algafood.core.openapi;
+package com.algaworks.algafood.core.springfox;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.model.CozinhaModel;
@@ -20,7 +20,6 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
 import springfox.documentation.builders.*;
-import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
@@ -33,7 +32,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.io.File;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLStreamHandler;
