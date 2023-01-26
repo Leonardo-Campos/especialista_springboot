@@ -23,6 +23,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -50,25 +52,19 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private PedidoInputDisassembler pedidoInputDisassembler;
 
-    @ApiImplicitParams({
-            @ApiImplicitParam(value = "Nomes das propriedades para filtar na resposta, separados por vírgula",
-            name = "campos", paramType = "query", type = "string")
-    })
+    @Autowired
+    private PagedResourcesAssembler<Pedido> pagedResourcesAssembler;
+
+    @Override
     @GetMapping
-    public Page<PedidoResumoModel> pesquisar(PedidoFilter filtro,
-                                             @PageableDefault(size = 10) Pageable pageable) {
+    public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro,
+                                                   @PageableDefault(size = 10) Pageable pageable) {
         pageable = traduzirPageable(pageable);
 
         Page<Pedido> pedidosPage = pedidoRepository.findAll(
                 PedidoSpecs.usandoFiltro(filtro), pageable);
 
-        List<PedidoResumoModel> pedidosResumoModel = pedidoResumoModelAssembler
-                .toCollectionModel(pedidosPage.getContent());
-
-        Page<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(
-                pedidosResumoModel, pageable, pedidosPage.getTotalElements());
-
-        return pedidosResumoModelPage;
+        return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
 
     @PostMapping
@@ -77,7 +73,6 @@ public class PedidoController implements PedidoControllerOpenApi {
         try {
             Pedido novoPedido = pedidoInputDisassembler.toDomainObject(pedidoInput);
 
-            // TODO pegar usuário autenticado
             novoPedido.setCliente(new Usuario());
             novoPedido.getCliente().setId(1L);
 
