@@ -3,7 +3,10 @@ package com.algaworks.algafood.api.assembler;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.controller.EstadoController;
+import com.algaworks.algafood.api.model.CidadeModel;
+import com.algaworks.algafood.domain.model.Cidade;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
@@ -22,6 +25,9 @@ public class EstadoModelAssembler
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public EstadoModelAssembler() {
         super(EstadoController.class, EstadoModel.class);
     }
@@ -31,7 +37,7 @@ public class EstadoModelAssembler
         EstadoModel estadoModel = createModelWithId(estado.getId(), estado);
         modelMapper.map(estado, estadoModel);
 
-        estadoModel.add(linkTo(EstadoController.class).withRel("estados"));
+        estadoModel.add(algaLinks.linkToEstados("estados"));
 
         return estadoModel;
     }
@@ -39,6 +45,6 @@ public class EstadoModelAssembler
     @Override
     public CollectionModel<EstadoModel> toCollectionModel(Iterable<? extends Estado> entities) {
         return super.toCollectionModel(entities)
-                .add(linkTo(EstadoController.class).withSelfRel());
+                .add(algaLinks.linkToEstados());
     }
 }

@@ -1,5 +1,6 @@
 package com.algaworks.algafood.api.assembler;
 
+import com.algaworks.algafood.api.AlgaLinks;
 import com.algaworks.algafood.api.controller.*;
 import com.algaworks.algafood.api.model.PedidoModel;
 import com.algaworks.algafood.domain.model.Pedido;
@@ -25,6 +26,9 @@ public class PedidoModelAssembler
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private AlgaLinks algaLinks;
+
     public PedidoModelAssembler() {
         super(PedidoController.class, PedidoModel.class);
     }
@@ -34,43 +38,35 @@ public class PedidoModelAssembler
         PedidoModel pedidoModel = createModelWithId(pedido.getCodigo(), pedido);
         modelMapper.map(pedido, pedidoModel);
 
-        TemplateVariables pageVariables = new TemplateVariables(
-                new TemplateVariable("page", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("size", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("sort", TemplateVariable.VariableType.REQUEST_PARAM)
-        );
+        pedidoModel.add(algaLinks.linkToPedidos());
 
-        TemplateVariables filtroVariables = new TemplateVariables(
-                new TemplateVariable("clienteId", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("restauranteId", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("dataCriacaoInicio", TemplateVariable.VariableType.REQUEST_PARAM),
-                new TemplateVariable("dataCriacaoFim", TemplateVariable.VariableType.REQUEST_PARAM));
+        if (pedido.podeSerConfirmado()) {
+            pedidoModel.add(algaLinks.linkToConfirmacaoPedido(pedido.getCodigo(), "confirmar"));
+        }
 
-        String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
+        if (pedido.podeSerCancelado()) {
+            pedidoModel.add(algaLinks.linkToCancelamentoPedido(pedido.getCodigo(), "cancelar"));
+        }
 
-        pedidoModel.add(new Link(UriTemplate.of(pedidosUrl,
-                pageVariables.concat(filtroVariables)), "pedidos"));
+        if (pedido.podeSerEntregue()) {
+            pedidoModel.add(algaLinks.linkToEntregaPedido(pedido.getCodigo(), "entregar"));
+        }
 
-//        pedidoModel.add(linkTo(PedidoController.class).withRel("pedidos"));
+        pedidoModel.getRestaurante().add(
+                algaLinks.linkToRestaurante(pedido.getRestaurante().getId()));
 
-        pedidoModel.getRestaurante().add(linkTo(methodOn(RestauranteController.class)
-                .buscar(pedido.getRestaurante().getId())).withSelfRel());
+        pedidoModel.getCliente().add(
+                algaLinks.linkToUsuario(pedido.getCliente().getId()));
 
-        pedidoModel.getCliente().add(linkTo(methodOn(UsuarioController.class)
-                .buscar(pedido.getCliente().getId())).withSelfRel());
+        pedidoModel.getFormaPagamento().add(
+                algaLinks.linkToFormaPagamento(pedido.getFormaPagamento().getId()));
 
-        // Passamos null no segundo argumento, porque é indiferente para a
-        // construção da URL do recurso de forma de pagamento
-        pedidoModel.getFormaPagamento().add(linkTo(methodOn(FormaPagamentoController.class)
-                .buscar(pedido.getFormaPagamento().getId(), null)).withSelfRel());
-
-        pedidoModel.getEnderecoEntrega().getCidade().add(linkTo(methodOn(CidadeController.class)
-                .buscar(pedido.getEnderecoEntrega().getCidade().getId())).withSelfRel());
+        pedidoModel.getEnderecoEntrega().getCidade().add(
+                algaLinks.linkToCidade(pedido.getEnderecoEntrega().getCidade().getId()));
 
         pedidoModel.getItens().forEach(item -> {
-            item.add(linkTo(methodOn(RestauranteProdutoController.class)
-                    .buscar(pedidoModel.getRestaurante().getId(), item.getProdutoId()))
-                    .withRel("produto"));
+            item.add(algaLinks.linkToProduto(
+                    pedidoModel.getRestaurante().getId(), item.getProdutoId(), "produto"));
         });
 
         return pedidoModel;
