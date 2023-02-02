@@ -3,12 +3,16 @@ package com.algaworks.algafood.api.openapi.controller;
 import com.algaworks.algafood.domain.filter.VendaDiariaFilter;
 import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import io.swagger.annotations.*;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 @Api(tags = "Estatísticas")
 public interface EstatisticasControllerOpenApi {
+
+    @ApiOperation(value = "Estatísticas", hidden = true)
+    EstatisticasModel estatisticas();
 
     @ApiOperation("Consulta estatísticas de vendas diárias")
     @ApiImplicitParams({
@@ -29,4 +33,7 @@ public interface EstatisticasControllerOpenApi {
     ResponseEntity<byte[]> consultarVendasDiariasPdf(
             VendaDiariaFilter filtro,
             String timeOffset);
+
+    public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
+    }
 }
