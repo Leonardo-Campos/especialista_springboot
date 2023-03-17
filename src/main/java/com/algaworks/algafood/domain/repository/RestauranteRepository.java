@@ -28,6 +28,8 @@ public interface RestauranteRepository
 
     List<Restaurante> findTop2ByNomeContaining(String nome);
 
+    boolean existsResponsavel(Long restauranteId, Long usuarioId);
+
 
 }
 
