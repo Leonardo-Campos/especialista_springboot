@@ -65,6 +65,7 @@ public class PedidoController implements PedidoControllerOpenApi {
     @Autowired
     private AlgaSecurity algaSecurity;
 
+    @CheckSecurity.Pedidos.PodePesquisar
     @Override
     @GetMapping
     public PagedModel<PedidoResumoModel> pesquisar(PedidoFilter filtro,
@@ -79,6 +80,7 @@ public class PedidoController implements PedidoControllerOpenApi {
         return pagedResourcesAssembler.toModel(pedidosPage, pedidoResumoModelAssembler);
     }
 
+    @CheckSecurity.Pedidos.PodeCriar
     @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

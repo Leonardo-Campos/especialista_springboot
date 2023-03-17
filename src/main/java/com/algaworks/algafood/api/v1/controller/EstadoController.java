@@ -9,6 +9,7 @@ import com.algaworks.algafood.api.v1.assembler.EstadoInputDisassembler;
 import com.algaworks.algafood.api.v1.assembler.EstadoModelAssembler;
 import com.algaworks.algafood.api.v1.model.EstadoModel;
 import com.algaworks.algafood.api.v1.model.input.EstadoInput;
+import com.algaworks.algafood.core.security.CheckSecurity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,7 @@ public class EstadoController implements EstadoControllerOpenApi {
     @Autowired
     private EstadoInputDisassembler estadoInputDisassembler;
 
+    @CheckSecurity.Estados.PodeConsultar
     @Override
     @GetMapping
     public CollectionModel<EstadoModel> listar() {
@@ -49,6 +51,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return estadoModelAssembler.toCollectionModel(todosEstados);
     }
 
+    @CheckSecurity.Estados.PodeConsultar
     @GetMapping("/{estadoId}")
     public EstadoModel buscar(@PathVariable Long estadoId) {
         Estado estado = cadastroEstado.buscarOuFalhar(estadoId);
@@ -56,6 +59,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return estadoModelAssembler.toModel(estado);
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EstadoModel adicionar(@RequestBody @Valid EstadoInput estadoInput) {
@@ -66,6 +70,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return estadoModelAssembler.toModel(estado);
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @PutMapping("/{estadoId}")
     public EstadoModel atualizar(@PathVariable Long estadoId,
                                  @RequestBody @Valid EstadoInput estadoInput) {
@@ -78,6 +83,7 @@ public class EstadoController implements EstadoControllerOpenApi {
         return estadoModelAssembler.toModel(estadoAtual);
     }
 
+    @CheckSecurity.Estados.PodeEditar
     @DeleteMapping("/{estadoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void remover(@PathVariable Long estadoId) {
