@@ -1,7 +1,7 @@
 package com.algaworks.algafood.api.v1.openapi.controller;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
-import com.algaworks.algafood.api.v1.model.input.PermissaoModel;
+import com.algaworks.algafood.api.v1.model.PermissaoModel;
 import io.swagger.annotations.*;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;

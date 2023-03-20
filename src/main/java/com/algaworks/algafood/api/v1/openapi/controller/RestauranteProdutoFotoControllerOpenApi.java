@@ -2,7 +2,7 @@ package com.algaworks.algafood.api.v1.openapi.controller;
 
 import com.algaworks.algafood.api.exceptionhandler.Problem;
 import com.algaworks.algafood.api.v1.model.input.FotoProdutoInput;
-import com.algaworks.algafood.domain.model.FotoProdutoModel;
+import com.algaworks.algafood.api.v1.model.FotoProdutoModel;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;

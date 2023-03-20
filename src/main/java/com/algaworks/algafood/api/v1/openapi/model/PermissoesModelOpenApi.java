@@ -1,6 +1,6 @@
 package com.algaworks.algafood.api.v1.openapi.model;
 
-import com.algaworks.algafood.api.v1.model.input.PermissaoModel;
+import com.algaworks.algafood.api.v1.model.PermissaoModel;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import org.springframework.hateoas.Links;

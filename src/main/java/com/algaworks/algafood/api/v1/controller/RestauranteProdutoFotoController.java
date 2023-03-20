@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.algaworks.algafood.domain.model.FotoProdutoModel;
+import com.algaworks.algafood.api.v1.model.FotoProdutoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
