@@ -1,5 +1,9 @@
 package com.algaworks.algafood.core.security.authorizationserver;
 
+import com.nimbusds.jose.JWSAlgorithm;
+import com.nimbusds.jose.jwk.JWKSet;
+import com.nimbusds.jose.jwk.KeyUse;
+import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +25,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
 import javax.sql.DataSource;
+import java.security.KeyPair;
+import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 
 @Configuration
@@ -70,40 +76,56 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
                 .tokenGranter(tokenGranter(endpoints));
     }
 
-        private ApprovalStore approvalStore(TokenStore tokenStore) {
-            var approvalStore = new TokenApprovalStore();
-            approvalStore.setTokenStore(tokenStore);
+    private ApprovalStore approvalStore(TokenStore tokenStore) {
+        var approvalStore = new TokenApprovalStore();
+        approvalStore.setTokenStore(tokenStore);
 
-            return approvalStore;
-        }
+        return approvalStore;
+    }
+
+    @Bean
+    public JWKSet jwkSet() {
+        RSAKey.Builder builder = new RSAKey.Builder((RSAPublicKey) keyPair().getPublic())
+                .keyUse(KeyUse.SIGNATURE)
+                .algorithm(JWSAlgorithm.RS256)
+                .keyID("algafood-key-id");
+
+        return new JWKSet(builder.build());
+
+    }
 
     @Bean
     public JwtAccessTokenConverter jwtAccessTokenConverter() {
         var jwtAccessTokenConverter = new JwtAccessTokenConverter();
+
+        jwtAccessTokenConverter.setKeyPair(keyPair());
+
+        return jwtAccessTokenConverter;
+    }
+
+    private KeyPair keyPair() {
 
         var keyStorePass = jwtKeyStoreProperties.getPassword();
         var keyPairAlias = jwtKeyStoreProperties.getKeypairAlias();
 
         var keyStoreKeyFactory = new KeyStoreKeyFactory(
                 jwtKeyStoreProperties.getJksLocation(), keyStorePass.toCharArray());
-        var keyPair = keyStoreKeyFactory.getKeyPair(keyPairAlias);
 
-        jwtAccessTokenConverter.setKeyPair(keyPair);
+        return keyStoreKeyFactory.getKeyPair(keyPairAlias);
 
-        return jwtAccessTokenConverter;
     }
 
 
-        private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
-            var pkceAuthorizationCodeTokenGranter = new PkceAuthorizationCodeTokenGranter(endpoints.getTokenServices(),
-                    endpoints.getAuthorizationCodeServices(), endpoints.getClientDetailsService(),
-                    endpoints.getOAuth2RequestFactory());
+    private TokenGranter tokenGranter(AuthorizationServerEndpointsConfigurer endpoints) {
+        var pkceAuthorizationCodeTokenGranter = new PkceAuthorizationCodeTokenGranter(endpoints.getTokenServices(),
+                endpoints.getAuthorizationCodeServices(), endpoints.getClientDetailsService(),
+                endpoints.getOAuth2RequestFactory());
 
-            var granters = Arrays.asList(
-                    pkceAuthorizationCodeTokenGranter, endpoints.getTokenGranter());
+        var granters = Arrays.asList(
+                pkceAuthorizationCodeTokenGranter, endpoints.getTokenGranter());
 
-            return new CompositeTokenGranter(granters);
-        }
+        return new CompositeTokenGranter(granters);
+    }
 
 
 }
