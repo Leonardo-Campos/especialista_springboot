@@ -18,8 +18,8 @@ services:
     image: algafood-api
     command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "60", "--", "java", "-jar","api.jar"]
     environment:
-      AWS_ACCESS_KEY: ${AWS_ACCESS_KEY}
-      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+      ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO: ${ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO}
+      ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA: ${ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA}
       DB_HOST: algafood-mysql
     ports:
       - "8080:8080"
