@@ -21,9 +21,17 @@ services:
       ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO: ${ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO}
       ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA: ${ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA}
       DB_HOST: algafood-mysql
-    ports:
-      - "8080:8080"
     networks:
       - algafood-network
     depends_on:
       - algafood-mysql
+
+  algafood-proxy:
+    build: ./nginx
+    image: algafood-proxy
+    ports:
+      - "80:80"
+    networks:
+      - algafood-network
+    depends_on:
+      - algafood-api
