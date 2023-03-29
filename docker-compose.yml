@@ -14,6 +14,11 @@ services:
     networks:
       - algafood-network
 
+  algafood-redis:
+    image: redis:6.2.1-alpine
+    networks:
+      - algafood-network
+
   algafood-api:
     image: algafood-api
     command: ["/wait-for-it.sh", "algafood-mysql:3306", "-t", "60", "--", "java", "-jar","api.jar"]
@@ -21,6 +26,8 @@ services:
       ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO: ${ALGAFOOD_STORAGE_S3_ID_CHAVE_ACESSO}
       ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA: ${ALGAFOOD_STORAGE_S3_CHAVE_ACESSO_SECRETA}
       DB_HOST: algafood-mysql
+      SPRING_SESSION_STORE_TYPE: redis
+      SPRING_REDIS_HOST: algafood-redis
     networks:
       - algafood-network
     depends_on:
