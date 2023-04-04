@@ -1,5 +1,6 @@
 package com.algaworks.algafood.core.springdoc;
 
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springframework.context.annotation.Configuration;
 
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -20,6 +21,8 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 @Configuration
 @SecurityScheme(name = "security_auth",
@@ -49,7 +52,10 @@ public class SpringDocConfig {
                 ).externalDocs(new ExternalDocumentation()
                         .description("AlgaWorks")
                         .url("https://algaworks.com")
-                );
+                ).tags(Arrays.asList(
+                        new Tag().name("Cidades").description("Gerencia as cidades")
+
+                ));
     }
 
 }
