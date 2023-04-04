@@ -17,12 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RestController
 @RequestMapping(path = "/v1/cidades", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,28 +40,25 @@ public class CidadeController implements CidadeControllerOpenApi {
     private CidadeInputDisassembler cidadeInputDisassembler;
 
     @CheckSecurity.Cidades.PodeConsultar
+    @Override
     @GetMapping
     public CollectionModel<CidadeModel> listar() {
         List<Cidade> todasCidades = cidadeRepository.findAll();
 
         return cidadeModelAssembler.toCollectionModel(todasCidades);
-
-//        cidadesCollectionModel.add(linkTo(CidadeControllerV2.class).withSelfRel());
-
     }
 
-
     @CheckSecurity.Cidades.PodeConsultar
+    @Override
     @GetMapping("/{cidadeId}")
-    public CidadeModel buscar(
-            @PathVariable Long cidadeId) {
+    public CidadeModel buscar(@PathVariable Long cidadeId) {
         Cidade cidade = cadastroCidade.buscarOuFalhar(cidadeId);
 
         return cidadeModelAssembler.toModel(cidade);
-
     }
 
     @CheckSecurity.Cidades.PodeEditar
+    @Override
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CidadeModel adicionar(@RequestBody @Valid CidadeInput cidadeInput) {
@@ -70,7 +66,6 @@ public class CidadeController implements CidadeControllerOpenApi {
             Cidade cidade = cidadeInputDisassembler.toDomainObject(cidadeInput);
 
             cidade = cadastroCidade.salvar(cidade);
-
 
             CidadeModel cidadeModel = cidadeModelAssembler.toModel(cidade);
 
@@ -83,10 +78,10 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @CheckSecurity.Cidades.PodeEditar
+    @Override
     @PutMapping("/{cidadeId}")
-    public CidadeModel atualizar(
-            @PathVariable Long cidadeId, @RequestBody @Valid CidadeInput cidadeInput) {
-
+    public CidadeModel atualizar(@PathVariable Long cidadeId,
+                                 @RequestBody @Valid CidadeInput cidadeInput) {
         try {
             Cidade cidadeAtual = cadastroCidade.buscarOuFalhar(cidadeId);
 
@@ -101,11 +96,12 @@ public class CidadeController implements CidadeControllerOpenApi {
     }
 
     @CheckSecurity.Cidades.PodeEditar
+    @Override
     @DeleteMapping("/{cidadeId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable Long cidadeId) {
-
+    public ResponseEntity<Void> remover(@PathVariable Long cidadeId) {
         cadastroCidade.excluir(cidadeId);
+        return ResponseEntity.noContent().build();
     }
 
 }

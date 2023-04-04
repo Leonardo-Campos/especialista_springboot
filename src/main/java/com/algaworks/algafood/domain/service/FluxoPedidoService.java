@@ -17,7 +17,7 @@ public class FluxoPedidoService {
 
 
     @Transactional
-    public void confimar(String codigoPedido) {
+    public void confirmar(String codigoPedido) {
         Pedido pedido = emissaoPedido.buscarOuFalhar(codigoPedido);
         pedido.confirmar();
 

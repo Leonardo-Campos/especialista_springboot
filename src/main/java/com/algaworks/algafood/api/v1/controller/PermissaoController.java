@@ -33,4 +33,5 @@ public class PermissaoController implements PermissaoControllerOpenApi {
 
         return permissaoModelAssembler.toCollectionModel(todasPermissoes);
     }
+
 }

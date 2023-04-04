@@ -1,16 +1,12 @@
 package com.algaworks.algafood.api.v1;
 
+import com.algaworks.algafood.api.v1.controller.*;
+import org.springframework.hateoas.*;
+import org.springframework.hateoas.TemplateVariable.VariableType;
+import org.springframework.stereotype.Component;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import com.algaworks.algafood.api.v1.controller.*;
-import org.springframework.hateoas.IanaLinkRelations;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.TemplateVariable;
-import org.springframework.hateoas.TemplateVariable.VariableType;
-import org.springframework.hateoas.TemplateVariables;
-import org.springframework.hateoas.UriTemplate;
-import org.springframework.stereotype.Component;
 
 @Component
 public class AlgaLinks {
@@ -32,7 +28,7 @@ public class AlgaLinks {
 
         String pedidosUrl = linkTo(PedidoController.class).toUri().toString();
 
-        return new Link(UriTemplate.of(pedidosUrl,
+        return Link.of(UriTemplate.of(pedidosUrl,
                 PAGINACAO_VARIABLES.concat(filtroVariables)), rel);
     }
 
@@ -63,7 +59,7 @@ public class AlgaLinks {
     public Link linkToRestaurantes(String rel) {
         String restaurantesUrl = linkTo(RestauranteController.class).toUri().toString();
 
-        return new Link(UriTemplate.of(restaurantesUrl, PROJECAO_VARIABLES), rel);
+        return Link.of(UriTemplate.of(restaurantesUrl, PROJECAO_VARIABLES), rel);
     }
 
     public Link linkToRestaurantes() {
@@ -313,7 +309,7 @@ public class AlgaLinks {
         String pedidosUrl = linkTo(methodOn(EstatisticasController.class)
                 .consultarVendasDiarias(null, null)).toUri().toString();
 
-        return new Link(UriTemplate.of(pedidosUrl, filtroVariables), rel);
+        return Link.of(UriTemplate.of(pedidosUrl, filtroVariables), rel);
     }
 
 }

@@ -8,6 +8,7 @@ import com.algaworks.algafood.domain.model.dto.VendaDiaria;
 import com.algaworks.algafood.domain.service.VendaQueryService;
 import com.algaworks.algafood.domain.service.VendaReportService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -67,5 +68,7 @@ public class EstatisticasController implements EstatisticasControllerOpenApi {
                 .body(bytesPdf);
     }
 
+    public static class EstatisticasModel extends RepresentationModel<EstatisticasModel> {
+    }
 
 }
