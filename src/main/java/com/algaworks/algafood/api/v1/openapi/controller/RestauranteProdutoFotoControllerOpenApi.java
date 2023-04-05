@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +19,10 @@ import java.io.IOException;
 @SecurityRequirement(name = "security_auth")
 public interface RestauranteProdutoFotoControllerOpenApi {
 
-    FotoProdutoModel atualizarFoto(Long restauranteId, Long produtoId, FotoProdutoInput fotoProdutoInput,
-                                   MultipartFile arquivo) throws IOException;
+    @Operation(summary = "Atualiza a foto do produto de um restaurante")
+    FotoProdutoModel atualizarFoto(@Parameter(description = "Id do restaurante", example = "1", required = true) Long restauranteId,
+                                   @Parameter(description = "Id do produto", example = "2", required = true) Long produtoId,
+                                   @RequestBody(required = true) FotoProdutoInput fotoProdutoInput) throws IOException;
 
     ResponseEntity<Void> excluir(Long restauranteId,Long produtoId);
 
