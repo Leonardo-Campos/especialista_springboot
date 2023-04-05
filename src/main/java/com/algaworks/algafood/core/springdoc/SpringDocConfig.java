@@ -61,29 +61,12 @@ public class SpringDocConfig {
                         .description("AlgaWorks")
                         .url("https://algaworks.com"))
                 .tags(Arrays.asList(
-                        new Tag().name("Cidades").description("Gerencia as cidades")
-                ))
-                .tags(Arrays.asList(
-                        new Tag().name("Cidades").description("Gerencia as cidades"),
-                        new Tag().name("Grupos").description("Gerencia os grupos")
-                ))
-                .tags(Arrays.asList(
-                        new Tag().name("Cidades").description("Gerencia as cidades"),
-                        new Tag().name("Grupos").description("Gerencia os grupos"),
-                        new Tag().name("Cozinhas").description("Gerencia as cozinhas")
-                ))
-                .tags(Arrays.asList(
-                        new Tag().name("Cidades").description("Gerencia as cidades"),
-                        new Tag().name("Grupos").description("Gerencia os grupos"),
-                        new Tag().name("Cozinhas").description("Gerencia as cozinhas"),
-                        new Tag().name("Formas de pagamento").description("Gerencia as formas de pagamento")
-                ))
-                .tags(Arrays.asList(
                         new Tag().name("Cidades").description("Gerencia as cidades"),
                         new Tag().name("Grupos").description("Gerencia os grupos"),
                         new Tag().name("Cozinhas").description("Gerencia as cozinhas"),
                         new Tag().name("Formas de pagamento").description("Gerencia as formas de pagamento"),
-                        new Tag().name("Pedidos").description("Gerencia os pedidos")
+                        new Tag().name("Pedidos").description("Gerencia os pedidos"),
+                        new Tag().name("Restaurantes").description("Gerencia os restaurantes")
                 ))
                 .components(new Components()
                         .schemas(gerarSchemas())
